@@ -1,15 +1,17 @@
 package src.main.java;
 import java.io.*;
-
 import java.util.ArrayList;
-
+import java.util.HashSet;
 
 public class Game {
-    private final String WORDS_FILENAME = "src/main/resources/russian_nouns.txt";
+    private static final String WORDS_FILENAME = "src/main/resources/russian_nouns.txt";
+    private static final int MAX_ERRORS = 6;
     private final HangmanCLI gameCLI;
+    private final ArrayList<String> listOfWords;
 
     Game(HangmanCLI gameCLI){
         this.gameCLI = gameCLI;
+        this.listOfWords = readWordsFile(WORDS_FILENAME);
     }
     public ArrayList <String> readWordsFile(String fileName){
         ArrayList<String> listOfWords = new ArrayList<>();
@@ -27,14 +29,19 @@ public class Game {
     }
     public String chooseWord(ArrayList<String> listOfWords){
         int wordIndex = (int) (Math.random() * listOfWords.size());
-
         return listOfWords.get(wordIndex);
     }
+
     public void start(){
-        ArrayList<String> listOfWords = readWordsFile(WORDS_FILENAME);
-        System.out.println(listOfWords);
-        gameCLI.printHangman(0);
         String hiddenWord = chooseWord(listOfWords);
-        System.out.println(hiddenWord);
+        int errors = 0;
+        HashSet<Character> enteredLetters = new HashSet<Character>();
+        gameCLI.printHangman(errors);
+        gameCLI.hiddenWord = new StringBuilder("_".repeat(hiddenWord.length()));
+        while ((!hiddenWord.contentEquals(gameCLI.hiddenWord)) && (errors != MAX_ERRORS)){
+            gameCLI.printWordInformation(errors, enteredLetters);
+
+        }
+
     }
 }
