@@ -3,6 +3,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Game {
     private static final String WORDS_FILENAME = "src/main/resources/russian_nouns.txt";
@@ -54,21 +55,25 @@ public class Game {
             gameCLI.printLoseMessage(errors, hiddenWord);
         else
             gameCLI.printVictoryMessage(errors);
-
+        Scanner sc = new Scanner(System.in);
+        sc.next();
     }
 
     private void guessLetter(String hiddenWord){
         Scanner sc = new Scanner(System.in);
-        String guessLetter = sc.next();
+        String guessLetter = sc.next().toLowerCase();
         while (true){
             if (guessLetter.length() != 1) {
                 System.out.println("Enter only a letter");
+            }
+            else if (!Pattern.matches("[А-Яа-яЁё]",guessLetter)){
+                System.out.println("The letter must be from russian alphabet");
             }
             else if (enteredLetters.contains(guessLetter.charAt(0))){
                 System.out.println("This letter was entered before");
             }
             else break;
-            guessLetter = sc.next();
+            guessLetter = sc.next().toLowerCase();
         }
         enteredLetters.add(guessLetter.charAt(0));
         if (!hiddenWord.contains(guessLetter)){

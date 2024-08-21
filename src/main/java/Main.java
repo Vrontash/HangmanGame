@@ -8,17 +8,17 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         while (true) {
             gameCLI.printMainMenu();
-            String inAction = sc.next();
+            String inAction = sc.next().toLowerCase();
             while (inAction.length() != 1) {
                 System.out.println("Enter only a letter");
-                inAction = sc.next();
+                inAction = sc.next().toLowerCase();
             }
             switch (inAction){
-                case "S":
+                case "s":
                     Game game = new Game(gameCLI);
                     game.start();
                     break;
-                case "E":
+                case "e":
                     System.exit(0);
             }
         }
