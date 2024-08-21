@@ -2,17 +2,20 @@ package src.main.java;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Scanner;
 
 public class Game {
     private static final String WORDS_FILENAME = "src/main/resources/russian_nouns.txt";
     private static final int MAX_ERRORS = 6;
     private final HangmanCLI gameCLI;
     private final ArrayList<String> listOfWords;
-
+    private final HashSet<Character> enteredLetters = new HashSet<>();
+    private int errors = 0;
     Game(HangmanCLI gameCLI){
         this.gameCLI = gameCLI;
         this.listOfWords = readWordsFile(WORDS_FILENAME);
     }
+
     public ArrayList <String> readWordsFile(String fileName){
         ArrayList<String> listOfWords = new ArrayList<>();
         try {
@@ -27,6 +30,7 @@ public class Game {
         }
         return listOfWords;
     }
+
     public String chooseWord(ArrayList<String> listOfWords){
         int wordIndex = (int) (Math.random() * listOfWords.size());
         return listOfWords.get(wordIndex);
@@ -34,14 +38,48 @@ public class Game {
 
     public void start(){
         String hiddenWord = chooseWord(listOfWords);
-        int errors = 0;
-        HashSet<Character> enteredLetters = new HashSet<Character>();
-        gameCLI.printHangman(errors);
+        errors = 0;
         gameCLI.hiddenWord = new StringBuilder("_".repeat(hiddenWord.length()));
-        while ((!hiddenWord.contentEquals(gameCLI.hiddenWord)) && (errors != MAX_ERRORS)){
+        gameLoop(gameCLI, hiddenWord);
+    }
+
+    private void gameLoop(HangmanCLI gameCLI, String hiddenWord){
+        while ((!hiddenWord.contentEquals(gameCLI.hiddenWord))
+                && (errors != MAX_ERRORS)){
+            gameCLI.printHangman(errors);
             gameCLI.printWordInformation(errors, enteredLetters);
-
+            guessLetter(hiddenWord);
         }
+        if (errors == MAX_ERRORS)
+            gameCLI.printLoseMessage(errors, hiddenWord);
+        else
+            gameCLI.printVictoryMessage(errors);
 
+    }
+
+    private void guessLetter(String hiddenWord){
+        Scanner sc = new Scanner(System.in);
+        String guessLetter = sc.next();
+        while (true){
+            if (guessLetter.length() != 1) {
+                System.out.println("Enter only a letter");
+            }
+            else if (enteredLetters.contains(guessLetter.charAt(0))){
+                System.out.println("This letter was entered before");
+            }
+            else break;
+            guessLetter = sc.next();
+        }
+        enteredLetters.add(guessLetter.charAt(0));
+        if (!hiddenWord.contains(guessLetter)){
+            errors++;
+        }
+        else {
+            int index = hiddenWord.indexOf(guessLetter);
+            while (index >= 0) {
+                gameCLI.hiddenWord.setCharAt(index, guessLetter.charAt(0));
+                index = hiddenWord.indexOf(guessLetter, index + 1);
+            }
+        }
     }
 }

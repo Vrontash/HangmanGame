@@ -13,14 +13,15 @@ public class HangmanCLI {
         System.out.println("Number of errors: " +  errors);
         System.out.println("Entered letters: " +  enteredLetters);
         System.out.println(hiddenWord);
+        System.out.println("Letter: ");
     }
     public void printVictoryMessage(int errors){
         System.out.println("Congratulations!!! You've guessed the right word: " + hiddenWord.toString());
         System.out.println("You've made " + errors + " errors");
         System.out.println("Press any key to continue");
     }
-    public void printLoseMessage(int errors){
-        System.out.println("You've lost the game. The right word: " + hiddenWord.toString());
+    public void printLoseMessage(int errors, String hiddenWord){
+        System.out.println("You've lost the game. The right word: " + hiddenWord);
         System.out.println("You've made too many errors: " + errors);
         System.out.println("Press any key to continue");
     }
@@ -65,6 +66,7 @@ public class HangmanCLI {
                 System.out.println("|     /[]\\");
                 System.out.println("|        ");
                 System.out.println("|");
+                break;
             case 5:
                 System.out.println("————————");
                 System.out.println("|/     |");
@@ -72,6 +74,7 @@ public class HangmanCLI {
                 System.out.println("|     /[]\\");
                 System.out.println("|      |");
                 System.out.println("|");
+                break;
             case 6:
                 System.out.println("————————");
                 System.out.println("|/     |");
@@ -79,6 +82,7 @@ public class HangmanCLI {
                 System.out.println("|     /[]\\");
                 System.out.println("|      ||");
                 System.out.println("|");
+                break;
         }
     }
 
